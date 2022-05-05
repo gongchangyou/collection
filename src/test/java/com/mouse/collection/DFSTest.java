@@ -44,12 +44,12 @@ public class DFSTest {
         }
         dp[sx][sy] = 0;
 
-        val res = dfs(sx, sy, arr, n, ex, ey, dp);
+        val res = dfs(sx, sy, arr, n, ex, ey, dp, isVisit);
         log.info("res={}", res);
 
     }
 
-    private int dfs(int x,int y, int map[][], int n,int ex,int ey, int[][] dp) {
+    private int dfs(int x,int y, int map[][], int n,int ex,int ey, int[][] dp,boolean[][] isVisit) {
         System.out.println("访问"+(x)+"  " + y);
         if (x == ex && y == ey) {//跳到了
             return 0;
@@ -62,9 +62,9 @@ public class DFSTest {
             log.info("x={} y ={} i={} ",targetX, targetY, i);
 
             //check border
-            if (targetX >=0 && targetX < n && targetY>=0 && targetY <n && dp[targetX][targetY] < 0) {
+            if (targetX >=0 && targetX < n && targetY>=0 && targetY <n && !isVisit[targetX][targetY]) {
 
-                if (dp[targetX][targetY] > 0) { //这里进不来
+                if (dp[targetX][targetY] > 0) {
                     dp[targetX][targetY]=Math.min(dp[targetX][targetY], dp[x][y] + 1);
                 } else {
                     dp[targetX][targetY] = dp[x][y] + 1;
@@ -74,7 +74,11 @@ public class DFSTest {
                     log.info("x={} y={} continue result={}", x, y,result);
                     continue;
                 }
-                result = Math.min(result, dfs(targetX, targetY, map, n, ex, ey, dp) + 1);
+                isVisit[targetX][targetY] = true;
+                result = Math.min(result, dfs(targetX, targetY, map, n, ex, ey, dp, isVisit) + 1);
+
+//                isVisit[targetX][targetY] = false;
+                log.info("false x={} y={}", targetX, targetY);
             }
         }
         log.info("x={} y={} complete result={}", x, y,result);
